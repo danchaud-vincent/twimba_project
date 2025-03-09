@@ -3,3 +3,88 @@ html, body{
     padding: 0;
     font-family: 'Roboto', sans-serif;
 }
+
+/* Layout */
+header, main{
+    width: 290px;
+    margin: 0 auto;
+}
+
+.tweet-input-area{
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+textarea{
+    width: 100%;
+    box-sizing: border-box;
+    border: none;
+    resize: none;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+}
+
+.feed{
+    margin-top: 20px;
+}
+
+.tweet{
+    padding: 10px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    border-top: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+}
+
+.tweet-comment{
+    display: flex;
+    gap: 25px;
+}
+
+/* typography & icon */
+
+h1, h2, p{
+    margin-top: 0;
+}
+
+h2, p {
+    font-size: 14px;
+}
+
+h1{
+    color: #0F8CDF;
+    font-size: 20px;
+}
+
+h2{
+    margin-bottom: 10px;
+}
+
+i{
+    cursor: pointer;
+}
+
+
+/* images */
+.profile-picture{
+    width: 48px;
+    border: 1px solid lightgray;
+    border-radius: 50%;
+}
+
+/* button */
+.tweet-btn{
+    width: 100%;
+    padding: 5px 0;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    color: white;
+    background-color: #1DA1F2;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+}
