@@ -31,20 +31,25 @@ textarea{
 }
 
 .tweet{
+    margin-top: 10px;
     padding: 10px 0;
     display: flex;
     align-items: flex-start;
+    
     gap: 10px;
     border-top: 1px solid lightgray;
-    border-bottom: 1px solid lightgray;
 }
 
-.tweet-comment{
+.tweet-details{
     display: flex;
     gap: 25px;
 }
 
-/* typography & icon */
+.replies-comment-area{
+    margin: 10px 0;
+}
+
+/* typography */
 
 h1, h2, p{
     margin-top: 0;
@@ -63,8 +68,23 @@ h2{
     margin-bottom: 10px;
 }
 
+span{
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* icons */
 i{
-    cursor: pointer;
+    cursor: pointer; 
+    color: #999;
+}
+
+.liked{
+    color: red;
+}
+
+.retweetted{
+    color: limegreen;
 }
 
 
@@ -76,7 +96,7 @@ i{
 }
 
 /* button */
-.tweet-btn{
+.tweet-btn, .comment-btn{
     width: 100%;
     padding: 5px 0;
     font-family: 'Roboto', sans-serif;
@@ -87,4 +107,9 @@ i{
     border: none;
     border-radius: 25px;
     cursor: pointer;
+}
+
+/* hidden & showed */
+.hidden{
+    display: none;
 }
