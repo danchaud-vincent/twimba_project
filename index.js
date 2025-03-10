@@ -31,10 +31,12 @@ document.addEventListener('click', function(e){
     else if (e.target.dataset.comment){
         handleCommentClick(e.target.dataset.comment)
         render()
+        document.getElementById(`replies-${e.target.dataset.comment}`).classList.toggle('hidden')
     }
     else if (e.target.dataset.delete){
         handleDeleteClick(e.target.dataset)
         render()
+        document.getElementById(`replies-${e.target.dataset.delete}`).classList.toggle('hidden')
     }
 
 })
