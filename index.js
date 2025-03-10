@@ -3,15 +3,20 @@ import { v4 as uuidv4 } from 'https://cdn.jsdelivr.net/npm/uuid@latest/+esm';
 
 // element html
 const feed = document.getElementById("feed")
+const tweetBtn = document.getElementById('tweet-btn')
 
 // get the data into the local storage
-
+if(!localStorage.getItem('data-tweet')){
+    localStorage.setItem('data-tweet', JSON.stringify(tweetsData))
+}
 
 // render the html
 render()
 
 
+// ---------- EVENTS ----------
 document.addEventListener('click', function(e){
+
 
     if (e.target.dataset.likes){
         handleLikeClick(e.target.dataset.likes)
@@ -24,17 +29,71 @@ document.addEventListener('click', function(e){
     else if (e.target.dataset.replies){
         handleReplyClick(e.target.dataset.replies)
     }
+    else if (e.target.dataset.comment){
+        handleCommentClick(e.target.dataset.comment)
+        render()
+        document.getElementById(`replies-${e.target.dataset.comment}`).classList.toggle('hidden')
+    }
 
 })
 
+tweetBtn.addEventListener('click', function(){
+
+    // get the tweet input
+    const tweetInput = document.getElementById('tweet-input')
+
+    // create new tweet Object
+    if (tweetInput.value){
+        const newTweet = {
+            handle: `@ScrimbaUser`,
+            profilePic: `images/scrimbalogo.png`,
+            likes: 0,
+            retweets: 0,
+            tweetText: tweetInput.value,
+            replies: [],
+            isLiked: false,
+            isRetweeted: false,
+            uuid: uuidv4(),
+        }
+
+        // get the data from localstorage
+        let data = getDataFromLocalStorage()
+
+        // add to data
+        data.unshift(newTweet)
+
+        // set data
+        localStorage.setItem('data-tweet', JSON.stringify(data))
+
+        // clear the value
+        tweetInput.value = ''
+
+        render()
+    }
+})
+
+
+
 // ---------- FUNCTIONS ----------
+function getDataFromLocalStorage(){
+    // get the data
+    const data_string = localStorage.getItem('data-tweet')
+    const data = JSON.parse(data_string)
+
+    return data
+}
+
+
 function handleReplyClick(id){
     document.getElementById(`replies-${id}`).classList.toggle('hidden')
 }
 
 function handleLikeClick(id){
 
-    const tweetSelected = tweetsData.filter(tweet => tweet.uuid === id)[0]
+    // get the data
+    const data = getDataFromLocalStorage()
+
+    const tweetSelected = data.filter(tweet => tweet.uuid === id)[0]
 
     // increment the number of liked
     if (tweetSelected.isLiked){
@@ -46,11 +105,17 @@ function handleLikeClick(id){
     
     // set isLiked
     tweetSelected.isLiked = !tweetSelected.isLiked
+
+    // set the data to localstorage
+    localStorage.setItem('data-tweet', JSON.stringify(data))
 }
 
 function handleRetweetClick(id){
+
+    // get the data
+    const data = getDataFromLocalStorage()
     
-    const tweetSelected = tweetsData.filter(tweet => tweet.uuid === id)[0]
+    const tweetSelected = data.filter(tweet => tweet.uuid === id)[0]
     
     // increment the number of retweets
     if (tweetSelected.isRetweeted){
@@ -62,14 +127,47 @@ function handleRetweetClick(id){
     
     // set isLiked
     tweetSelected.isRetweeted = !tweetSelected.isRetweeted
+
+    // set the data to localstorage
+    localStorage.setItem('data-tweet', JSON.stringify(data))
+}
+
+function handleCommentClick(id){
+
+    // get the textarea of the comment section
+    const commentInput = document.getElementById(`comment-input-${id}`)
+
+    if (commentInput.value){
+
+        // create a reply object
+        const reply = {
+            handle: `@ScrimbaUser`,
+            profilePic: `images/scrimbalogo.png`,
+            tweetText: commentInput.value,
+        }
+
+        // get the data
+        const data = getDataFromLocalStorage()
+        const tweetCommented = data.filter(tweet => tweet.uuid === id)[0]
+
+        // add the reply to the data
+        tweetCommented.replies.unshift(reply)
+
+        // set the data to local storage
+        localStorage.setItem('data-tweet', JSON.stringify(data))
+    }
+
 }
 
 
-
 function render(){
+    // get the data
+    const data = getDataFromLocalStorage()
+
+    // init tweet dom
     let tweetDOM = ''
 
-    tweetsData.forEach(function(tweet){
+    data.forEach(function(tweet){
 
         // check if liked & retweeted
         let isLiked = ''
@@ -125,15 +223,13 @@ function render(){
                             <div class="hidden" id="replies-${tweet.uuid}">
                                 <div class="replies-comment-area">
                                     <textarea placeholder="Comment" id="comment-input-${tweet.uuid}"></textarea>
-                                    <button class="comment-btn" id="comment-btn-${tweet.uuid}">comment</button>
+                                    <button class="comment-btn" data-comment="${tweet.uuid}">comment</button>
                                 </div>
                                 ${repliesDOM}
                             </div>
                         </div>
                     </div>
                     `
-    
-        // add 
     })
 
     feed.innerHTML = tweetDOM
