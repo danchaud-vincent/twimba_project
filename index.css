@@ -31,6 +31,7 @@ textarea{
 }
 
 .tweet{
+    position: relative;
     margin-top: 10px;
     padding: 10px 0;
     display: flex;
@@ -77,6 +78,23 @@ span{
 i{
     cursor: pointer; 
     color: #999;
+}
+
+.delete-tweet{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    opacity: 0;
+    transition: all 150ms ease-in-out;
+}
+
+.delete-tweet:hover{
+    color: red;
+    opacity: 1;
+}
+
+.delete-tweet:active{
+    color: black;
 }
 
 .liked{

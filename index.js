@@ -6,6 +6,7 @@ const feed = document.getElementById("feed")
 const tweetBtn = document.getElementById('tweet-btn')
 
 // get the data into the local storage
+localStorage.clear()
 if(!localStorage.getItem('data-tweet')){
     localStorage.setItem('data-tweet', JSON.stringify(tweetsData))
 }
@@ -16,7 +17,6 @@ render()
 
 // ---------- EVENTS ----------
 document.addEventListener('click', function(e){
-
 
     if (e.target.dataset.likes){
         handleLikeClick(e.target.dataset.likes)
@@ -33,6 +33,11 @@ document.addEventListener('click', function(e){
         handleCommentClick(e.target.dataset.comment)
         render()
         document.getElementById(`replies-${e.target.dataset.comment}`).classList.toggle('hidden')
+    }
+    else if (e.target.dataset.delete){
+        handleDeleteClick(e.target.dataset)
+        render()
+        document.getElementById(`replies-${e.target.dataset.delete}`).classList.toggle('hidden')
     }
 
 })
@@ -156,7 +161,37 @@ function handleCommentClick(id){
         // set the data to local storage
         localStorage.setItem('data-tweet', JSON.stringify(data))
     }
+}
 
+function handleDeleteClick(dataset){
+    // get the id
+    const id = dataset.delete
+
+    // check if the tweet is a comment
+    const isComment = dataset.iscomment
+
+    // get the data
+    const data = getDataFromLocalStorage()
+
+    if (isComment){
+        // filter the tweet selected
+        const tweetSelected = data.filter(tweet => tweet.uuid ===id)[0]
+
+        // get index of the reply
+        const indexReply = Number(isComment)
+
+        tweetSelected.replies = tweetSelected.replies.filter((tweet, index) => index !== indexReply)
+    
+        // set the data to local storage
+        localStorage.setItem('data-tweet', JSON.stringify(data))
+    }
+    else{
+        // filter the tweet
+        const dataFiltered = data.filter(tweet => tweet.uuid !== id)
+
+        // set the data to local storage
+        localStorage.setItem('data-tweet', JSON.stringify(dataFiltered))
+    }
 }
 
 
@@ -184,11 +219,12 @@ function render(){
         // get the replies
         let repliesDOM = ''
 
-        tweet.replies.forEach(function(reply){
+        tweet.replies.forEach(function(reply, index){
 
             repliesDOM += `
                             <div class="tweet">
                                 <img src="${reply.profilePic}" class="profile-picture">
+                                <i class="fa-solid fa-trash delete-tweet" data-delete='${tweet.uuid}' data-iscomment='${index}'></i>
                                 <div class="tweet-inner">
                                     <h2>${reply.handle}</h2>
                                     <p>${reply.tweetText}</p>
@@ -202,6 +238,8 @@ function render(){
         tweetDOM += `
                     <div class="tweet">
                         <img src="${tweet.profilePic}" class="profile-picture">
+                        <i class="fa-solid fa-trash delete-tweet" data-delete='${tweet.uuid}'></i>
+
                         <div class="tweet-inner">
                             <h2>${tweet.handle}</h2>
                             <p>${tweet.tweetText}</p>
