@@ -6,7 +6,6 @@ const feed = document.getElementById("feed")
 const tweetBtn = document.getElementById('tweet-btn')
 
 // get the data into the local storage
-localStorage.clear()
 if(!localStorage.getItem('data-tweet')){
     localStorage.setItem('data-tweet', JSON.stringify(tweetsData))
 }
