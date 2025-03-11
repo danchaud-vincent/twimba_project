@@ -6,6 +6,7 @@ const feed = document.getElementById("feed")
 const tweetBtn = document.getElementById('tweet-btn')
 
 // get the data into the local storage
+localStorage.clear()
 if(!localStorage.getItem('data-tweet')){
     localStorage.setItem('data-tweet', JSON.stringify(tweetsData))
 }
@@ -36,7 +37,10 @@ document.addEventListener('click', function(e){
     else if (e.target.dataset.delete){
         handleDeleteClick(e.target.dataset)
         render()
-        document.getElementById(`replies-${e.target.dataset.delete}`).classList.toggle('hidden')
+
+        if (document.getElementById(`replies-${e.target.dataset.delete}`)){
+            document.getElementById(`replies-${e.target.dataset.delete}`).classList.toggle('hidden')
+        }
     }
 
 })
@@ -53,7 +57,7 @@ tweetBtn.addEventListener('click', function(){
             profilePic: `images/scrimbalogo.png`,
             likes: 0,
             retweets: 0,
-            tweetText: tweetInput.value,
+            tweetText: encoderHtml(tweetInput.value),
             replies: [],
             isLiked: false,
             isRetweeted: false,
@@ -192,6 +196,12 @@ function handleDeleteClick(dataset){
     }
 }
 
+function encoderHtml(myStr){
+    
+    const encodedStr = myStr.replace(/[\u00A0-\u9999<>\&]/g, i => "`"+i.charAt(0)+"`")
+    console.log(encodedStr)
+    return encodedStr
+}
 
 function render(){
     // get the data
